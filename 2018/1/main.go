@@ -82,10 +82,9 @@ func duplicateFrequency(input []int) (int, error) {
 
 		// if we are on the last element and we still did not find the
 		// duplicated frequency iterate over the same loop once again
-		if i == len(input)-1 {
+		i++
+		if i == len(input) {
 			i = 0
-		} else {
-			i++
 		}
 	}
 
