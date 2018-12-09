@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"strings"
 	"testing"
 )
@@ -9,6 +10,7 @@ func Test_graphTest(t *testing.T) {
 	inputTests := []struct {
 		input          []string
 		expectedOutput string
+		maxWorkingTime int
 	}{
 		{[]string{
 			"Step C must be finished before step A can begin.",
@@ -19,7 +21,7 @@ func Test_graphTest(t *testing.T) {
 			"Step D must be finished before step E can begin.",
 			"Step F must be finished before step E can begin.",
 		},
-			"CABDFE",
+			"CABDFE", 898,
 		},
 		{[]string{
 			"Step J must be finished before step C can begin.",
@@ -27,17 +29,24 @@ func Test_graphTest(t *testing.T) {
 			"Step J must be finished before step A can begin.",
 			"Step A must be finished before step Q can begin.",
 			"Step X must be finished before step I can begin.",
-		}, "XIJACQ",
+		}, "XIJACQ", 0,
 		},
 	}
 	for _, test := range inputTests {
 		parsedLines := parseLines(test.input)
-		graph, dependentGraph := createConnections(parsedLines)
-		rootNodes := findRootNodes(graph)
-		path := graphTraverse(graph, dependentGraph, rootNodes)
+		graph, dependencyGraph := createConnections(parsedLines)
+		rootNodes := findRootNodes(graph, dependencyGraph)
+		fmt.Println("Graph:", graph, "Dep graph: ", dependencyGraph)
+		path := graphTraverse(graph, dependencyGraph, rootNodes)
 		if strings.Join(path, "") != test.expectedOutput {
 			t.Errorf("Expected path: %v, actual: %v", test.expectedOutput, path)
 		}
+
+		/* 		graph, dependencyGraph = createConnections(parsedLines)
+		   		time := calculateTime(path, graph, dependencyGraph)
+		   		if time != test.maxWorkingTime {
+		   			t.Errorf("Time expected: %d, time actual: %d\n", test.maxWorkingTime, time)
+		   		} */
 	}
 
 }
